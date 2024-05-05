@@ -21,20 +21,15 @@ namespace AwesomeShop.Customers.Controllers
             };
 
             _connection = connectionFactory.CreateConnection("customers-service-publisher");
-
             _channel = _connection.CreateModel();
         }
 
         [HttpPost]
         public IActionResult Post(string text)
         {
-            var payload = JsonConvert.SerializeObject(text);
-            var byteArray = Encoding.UTF8.GetBytes(payload);
-
+            var byteArray = Encoding.UTF8.GetBytes(text);
             Console.WriteLine("CustomerCreatedEvent Published");
-
             _channel.BasicPublish(Exchange, "customer-created", null, byteArray);
-
             return NoContent();
         }
     }
